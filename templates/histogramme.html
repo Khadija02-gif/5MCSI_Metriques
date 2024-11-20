@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Histogramme</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  </head>
+  <body>
+    <div id="chart_div"></div>
+    <script>
+      google.charts.load('current', { packages: ['corechart'] });
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        // Récupérer les données de l'API /tawarano/
+        fetch('/tawarano/')
+          .then(response => response.json())
+          .then(data => {
+            // Préparer les données pour l'histogramme
+            var dataTable = new google.visualization.DataTable();
+            dataTable.addColumn('string', 'Date');
+            dataTable.addColumn('number', 'Température (°C)');
+            data.results.forEach(entry => {
+              var date = new Date(entry.Jour * 1000).toLocaleDateString();
+              dataTable.addRow([date, entry.temp]);
+            });
+
+            // Configurer les options de l'histogramme
+            var options = {
+              title: 'Histogramme des températures de la ville de Tawarano',
+              hAxis: { title: 'Date', titleTextStyle: { color: '#333' } },
+              vAxis: { title: 'Température (°C)', minValue: 0 },
+              legend: 'none',
+              bar: { groupWidth: '75%' }
+            };
+
+            // Dessiner l'histogramme
+            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+            chart.draw(dataTable, options);
+          });
+      }
+    </script>
+  </body>
+</html>
