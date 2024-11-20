@@ -12,10 +12,10 @@ def hello_world():
     return render_template('hello.html') #comm2
   
   
-  @app.route("/contact/")
+ @app.route("/contact/")
 def contact():
     return render_template("contact.html")
-  
+
 @app.route('/tawarano/')
 def meteo():
     response = urlopen('https://samples.openweathermap.org/data/2.5/forecast?lat=0&lon=0&appid=xxx')
